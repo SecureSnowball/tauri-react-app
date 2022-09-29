@@ -1,49 +1,63 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import { invoke } from "@tauri-apps/api/tauri";
-import "./App.css";
+// import { BrowserRouter, Routes, Route} from "react-router-dom";
+// import '@fontsource/roboto/300.css';
+// import '@fontsource/roboto/400.css';
+// import '@fontsource/roboto/500.css';
+// import '@fontsource/roboto/700.css';
+// import Home from './pages/Home';
+// import About from './pages/About';
+// import NavBar from './components/NavBar';
+// import Drawer from './components/Drawer';
+// import Container from '@mui/material/Container';
+import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
+import Button from '@mui/joy/Button';
+import React from 'react';
+import Login from './pages/Login';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+// import Home from './pages/Home';
+import About from './pages/About';
+import Register from './pages/Register';
 
-function App() {
-  const [greetMsg, setGreetMsg] = useState("");
-  const [name, setName] = useState("");
+const ModeToggle = () => {
+  const { mode, setMode } = useColorScheme();
+  const [mounted, setMounted] = React.useState(false);
 
-  async function greet() {
-    // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-    setGreetMsg(await invoke("greet", { name }));
+  // necessary for server-side rendering
+  // because mode is undefined on the server
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+  if (!mounted) {
+    return null;
   }
 
   return (
-    <div className="container">
-      <h1>Welcome to Tauri!</h1>
+    <Button
+      variant="outlined"
+      onClick={() => {
+        if (mode === 'light') {
+          setMode('dark');
+        } else {
+          setMode('light');
+        }
+      }}
+    >
+      {mode === 'light' ? 'Turn dark' : 'Turn light'}
+    </Button>
+  );
+};
 
-      <div className="row">
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo vite" alt="Vite logo" />
-        </a>
-        <a href="https://tauri.app" target="_blank">
-          <img src="/tauri.svg" className="logo tauri" alt="Tauri logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
 
-      <p>Click on the Tauri, Vite, and React logos to learn more.</p>
-
-      <div className="row">
-        <div>
-          <input
-            id="greet-input"
-            onChange={(e) => setName(e.currentTarget.value)}
-            placeholder="Enter a name..."
-          />
-          <button type="button" onClick={() => greet()}>
-            Greet
-          </button>
-        </div>
-      </div>
-      <p>{greetMsg}</p>
-    </div>
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+          {/* <ModeToggle /> */}
+          <Route path="/" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          {/* <Route path="/login" element={<Login />} />
+          <Route path="/about" element={<About />} /> */}
+      </Routes>
+    </BrowserRouter>
   );
 }
 
