@@ -1,7 +1,3 @@
-// use tracing::Level;
-
-// use crate::util::string_to_tracing_level;
-
 #[derive(Clone, Debug)]
 pub struct Config {
     pub app_name: String,
@@ -12,11 +8,13 @@ pub struct Config {
 
 impl Config {
     pub fn new() -> Config {
-        let app_name = std::env::var("APP_NAME").unwrap_or_else(|_| String::from("Web App"));
-        let app_secret = std::env::var("APP_SECRET").expect("APP_SECRET is not set");
-        let database_url = std::env::var("DATABASE_URL").expect("DATABASE_URL is not set");
+        let app_name = std::env::var("APP_NAME").unwrap_or_else(|_| String::from("Tauri App"));
+        let app_secret = std::env::var("APP_SECRET")
+            .unwrap_or_else(|_| String::from("5621709a6e58ea88d1c257f77c86fbfe"));
         let database_connection =
-            std::env::var("DATABASE_CONNECTION").expect("DATABASE_CONNECTION is not set");
+            std::env::var("DATABASE_CONNECTION").unwrap_or_else(|_| String::from("sqlite"));
+        let database_url =
+            std::env::var("DATABASE_URL").unwrap_or_else(|_| String::from("sqlite://db.sqlite"));
 
         Config {
             app_name,

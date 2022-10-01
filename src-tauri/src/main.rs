@@ -3,14 +3,14 @@
     windows_subsystem = "windows"
 )]
 
-use std::{error::Error};
+use std::error::Error;
 
 use auth::{login, register, Login, Register};
 use config::Config;
 use dotenv::dotenv;
 use sqlx::{sqlite::SqlitePoolOptions, Pool, Sqlite};
 
-use crate::auth::{AuthResponse, me};
+use crate::auth::{me, AuthResponse};
 
 mod auth;
 mod config;

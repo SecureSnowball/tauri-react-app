@@ -8,7 +8,7 @@ use crate::{
     util::{
         common::unix_timestamp_into_future,
         hashing::{hash_password, verify_password},
-        jwt::{encode_token, decode_token},
+        jwt::{decode_token, encode_token},
     },
 };
 
@@ -94,11 +94,7 @@ pub async fn register(
     Ok(AuthResponse { token, payload })
 }
 
-
-pub async fn me(
-    config: &Config,
-    token: String,
-) -> Result<AuthResponse, Box<dyn Error>> {
+pub async fn me(config: &Config, token: String) -> Result<AuthResponse, Box<dyn Error>> {
     Ok(AuthResponse {
         payload: decode_token(&config.app_secret, &token)?,
         token,

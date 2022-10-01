@@ -4,12 +4,13 @@ import Link from "@mui/joy/Link";
 import Sheet from "@mui/joy/Sheet";
 import TextField from "@mui/joy/TextField";
 import Typography from "@mui/joy/Typography";
-import { FormEvent, useEffect } from "react";
+import { FormEvent } from "react";
 import { useState } from "react";
-import { Link as RouterLink, redirect } from 'react-router-dom';
+import { Link as RouterLink, redirect, useNavigate } from 'react-router-dom';
 import { invoke } from "@tauri-apps/api/tauri";
 import { useDispatch, useSelector } from "react-redux";
 import { authenticate } from "../state/authSlice";
+import { AuthResponse } from "../interfaces/authResponse.interface";
 
 function Login() {
 
@@ -17,10 +18,11 @@ function Login() {
   const [password, setPassword] = useState('')
   // const auth = useSelector(state => state.auth)
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   async function handleLogin(e: FormEvent) {
     e.preventDefault();
-    const {token, payload} = await invoke("login_command", {
+    const authResponse: AuthResponse = await invoke("login_command", {
       payload: {
         name,
         email,
@@ -28,15 +30,10 @@ function Login() {
       }
     });
     dispatch(authenticate({
-      token,
-      user: payload,
+      token: authResponse.token,
+      user: authResponse.payload,
     }))
     return redirect("/dashboard")
-  }
-
-  function goToDashboard() {
-    console.log('Go to dashboard triggered');
-    return redirect("/register")
   }
 
   return (
