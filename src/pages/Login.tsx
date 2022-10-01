@@ -4,9 +4,28 @@ import Link from "@mui/joy/Link";
 import Sheet from "@mui/joy/Sheet";
 import TextField from "@mui/joy/TextField";
 import Typography from "@mui/joy/Typography";
+import { FormEvent } from "react";
+import { useState } from "react";
 import { Link as RouterLink } from 'react-router-dom';
+import { invoke } from "@tauri-apps/api/tauri";
 
 function Login() {
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  async function handleLogin(e: FormEvent) {
+    e.preventDefault();
+    const token = await invoke("login_command", {
+      payload: {
+        name,
+        email,
+        password
+      }
+    });
+    // const navigate = useNavigate();
+    // navigate("/login")
+  }
   return (
     <CssVarsProvider>
       <Sheet
@@ -29,25 +48,32 @@ function Login() {
           </Typography>
           <Typography level="body2">Login to continue</Typography>
         </div>
-        <TextField
-          name="email"
-          type="email"
-          placeholder="johndoe@email.com"
-          label="Email"
-        />
-        <TextField
-          name="password"
-          type="password"
-          placeholder="password"
-          label="Password"
-        />
-        <Button
-          sx={{
-            mt: 1,
-          }}
-        >
-          Log in
-        </Button>
+        <form onSubmit={handleLogin}>
+          <TextField
+            name="email"
+            type="email"
+            placeholder="johndoe@email.com"
+            label="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <TextField
+            name="password"
+            type="password"
+            placeholder="********"
+            label="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <Button
+            type="submit"
+            sx={{
+              mt: 1,
+            }}
+          >
+            Log in
+          </Button>
+        </form>
         <Typography
           endDecorator={<Link component={RouterLink} to="/register">Register</Link>}
           fontSize="sm"

@@ -1,0 +1,7 @@
+-- Add migration script here
+CREATE TABLE users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    name VARCHAR(128) NOT NULL,
+    email VARCHAR(128) UNIQUE NOT NULL,
+    password VARCHAR(256) NOT NULL
+)

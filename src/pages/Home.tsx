@@ -1,11 +1,8 @@
 import { useState } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 import Button from '@mui/material/Button';
-import Container from "@mui/material/Container";
-import NavBar from "../components/NavBar";
 
 const Home = () => {
-
   const [greetMsg, setGreetMsg] = useState("");
   const [name, setName] = useState("Lmao noob");
 

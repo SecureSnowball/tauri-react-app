@@ -4,9 +4,29 @@ import Link from "@mui/joy/Link";
 import Sheet from "@mui/joy/Sheet";
 import TextField from "@mui/joy/TextField";
 import Typography from "@mui/joy/Typography";
-import { Link as RouterLink } from 'react-router-dom';
+import { invoke } from "@tauri-apps/api/tauri";
+import { FormEvent, useState } from "react";
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
-function Login() {
+function Register() {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  async function handleRegister(e: FormEvent) {
+    e.preventDefault();
+    const token = await invoke("register_command", {
+      payload: {
+        name,
+        email,
+        password
+      }
+    });
+    console.log({ token })
+    // const navigate = useNavigate();
+    // navigate("/login")
+  }
+  
   return (
     <CssVarsProvider>
       <Sheet
@@ -29,41 +49,50 @@ function Login() {
           </Typography>
           <Typography level="body2">Register to continue</Typography>
         </div>
-        <TextField
-          name="name"
-          type="text"
-          placeholder="John Doe"
-          label="Name"
-        />
-        <TextField
-          name="email"
-          type="email"
-          placeholder="johndoe@email.com"
-          label="Email"
-        />
-        <TextField
-          name="password"
-          type="password"
-          placeholder="password"
-          label="Password"
-        />
-        <Button
-          sx={{
-            mt: 1,
-          }}
-        >
-          Register
-        </Button>
+        <form onSubmit={handleRegister}>
+          <TextField
+            name="name"
+            type="text"
+            placeholder="John Doe"
+            label="Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <TextField
+            name="email"
+            type="email"
+            placeholder="johndoe@email.com"
+            label="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <TextField
+            name="password"
+            type="password"
+            placeholder="password"
+            label="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <Button
+            type="submit"
+            sx={{
+              mt: 1,
+            }}
+          >
+            Register
+          </Button>
+        </form>
         <Typography
           endDecorator={<Link component={RouterLink} to="/">Login</Link>}
           fontSize="sm"
           sx={{ alignSelf: 'center' }}
         >
-          Don't have an account?
+          Have an account?
         </Typography>
       </Sheet>
     </CssVarsProvider>
   );
 }
 
-export default Login;
+export default Register;
