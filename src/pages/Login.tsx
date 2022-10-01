@@ -4,28 +4,41 @@ import Link from "@mui/joy/Link";
 import Sheet from "@mui/joy/Sheet";
 import TextField from "@mui/joy/TextField";
 import Typography from "@mui/joy/Typography";
-import { FormEvent } from "react";
+import { FormEvent, useEffect } from "react";
 import { useState } from "react";
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, redirect } from 'react-router-dom';
 import { invoke } from "@tauri-apps/api/tauri";
+import { useDispatch, useSelector } from "react-redux";
+import { authenticate } from "../state/authSlice";
 
 function Login() {
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  // const auth = useSelector(state => state.auth)
+  const dispatch = useDispatch();
 
   async function handleLogin(e: FormEvent) {
     e.preventDefault();
-    const token = await invoke("login_command", {
+    const {token, payload} = await invoke("login_command", {
       payload: {
         name,
         email,
         password
       }
     });
-    // const navigate = useNavigate();
-    // navigate("/login")
+    dispatch(authenticate({
+      token,
+      user: payload,
+    }))
+    return redirect("/dashboard")
   }
+
+  function goToDashboard() {
+    console.log('Go to dashboard triggered');
+    return redirect("/register")
+  }
+
   return (
     <CssVarsProvider>
       <Sheet
@@ -81,6 +94,14 @@ function Login() {
         >
           Don't have an account?
         </Typography>
+          <Button
+            sx={{
+              mt: 1,
+            }}
+            onClick={goToDashboard}
+          >
+            Dashboard
+          </Button>
       </Sheet>
     </CssVarsProvider>
   );
