@@ -6,25 +6,32 @@ import TextField from "@mui/joy/TextField";
 import Typography from "@mui/joy/Typography";
 import { invoke } from "@tauri-apps/api/tauri";
 import { FormEvent, useState } from "react";
+import { useDispatch } from "react-redux";
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { AuthResponse } from "../interfaces/authResponse.interface";
+import { authenticate } from "../state/authSlice";
 
 function Register() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   async function handleRegister(e: FormEvent) {
     e.preventDefault();
-    const token = await invoke("register_command", {
+    const authResponse: AuthResponse = await invoke("register_command", {
       payload: {
         name,
         email,
         password
       }
     });
-    console.log({ token })
-    // const navigate = useNavigate();
-    // navigate("/login")
+    dispatch(authenticate({
+      token: authResponse.token,
+      user: authResponse.payload,
+    }))
+    navigate("/dashboard")
   }
   
   return (

@@ -6,9 +6,9 @@ import TextField from "@mui/joy/TextField";
 import Typography from "@mui/joy/Typography";
 import { FormEvent } from "react";
 import { useState } from "react";
-import { Link as RouterLink, redirect, useNavigate } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { invoke } from "@tauri-apps/api/tauri";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { authenticate } from "../state/authSlice";
 import { AuthResponse } from "../interfaces/authResponse.interface";
 
@@ -33,7 +33,7 @@ function Login() {
       token: authResponse.token,
       user: authResponse.payload,
     }))
-    return redirect("/dashboard")
+    navigate("/dashboard")
   }
 
   return (
@@ -91,14 +91,6 @@ function Login() {
         >
           Don't have an account?
         </Typography>
-          <Button
-            sx={{
-              mt: 1,
-            }}
-            onClick={goToDashboard}
-          >
-            Dashboard
-          </Button>
       </Sheet>
     </CssVarsProvider>
   );
