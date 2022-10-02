@@ -28,7 +28,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.tauri.dev",
+      "identifier": "com.securesnowball.fireball",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
